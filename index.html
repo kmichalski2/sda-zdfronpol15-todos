@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="mb-1">TO-DO list</h1>
+
+      <ul class="list-group mb-5" id="tasksList"></ul>
+
+      <h2>Add task</h2>
+      <form class="mb-5" id="addTaskForm" validate>
+        <label class="form-label">Tytuł:</label>
+        <input
+          class="form-control"
+          type="text"
+          name="title"
+          placeholder="Wpisz nazwę nowego zadania..."
+          minlength="3"
+          required
+        />
+        <label class="form-label">Deadline:</label>
+        <input
+          class="form-control mb-3"
+          type="date"
+          name="deadline"
+          min="2022-10-18"
+          required
+        />
+
+        <button class="btn btn-primary" type="submit">Dodaj</button>
+      </form>
+
+      <h2>Edit task</h2>
+      <form id="editTaskForm" validate>
+        <label class="form-label">Tytuł:</label>
+        <input
+          class="form-control"
+          type="text"
+          name="title"
+          placeholder="Wpisz nazwę nowego zadania..."
+          minlength="3"
+          required
+        />
+        <label class="form-label">Deadline:</label>
+        <input
+          class="form-control mb-3"
+          type="date"
+          name="deadline"
+          min="2022-10-18"
+          required
+        />
+        <input type="hidden" name="id" required />
+
+        <button class="btn btn-success" type="submit">Zapisz</button>
+      </form>
+    </div>
+
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

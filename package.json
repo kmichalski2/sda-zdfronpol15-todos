@@ -1,0 +1,18 @@
+{
+  "name": "sda-firebase",
+  "version": "1.0.0",
+  "description": "Moja pierwsza aplikacja firebase",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "author": "Kamil Michalski",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.2.2",
+    "firebase": "^9.12.1",
+    "vite": "^3.1.8"
+  }
+}
