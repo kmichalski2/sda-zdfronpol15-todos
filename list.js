@@ -1,6 +1,16 @@
-import { doc, getDocs, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  Timestamp,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 
-export const initTaskList = (tasksCollection, db) => {
+export const renderTaskList = (tasksCollection, db) => {
   if (!tasksCollection) {
     throw new Error("Parametr tasksCollection nie został podany");
   }
@@ -8,7 +18,11 @@ export const initTaskList = (tasksCollection, db) => {
   const tasksList = document.querySelector("#tasksList");
 
   if (tasksList) {
-    getDocs(tasksCollection).then((result) => {
+    const tasksQuery = query(tasksCollection, orderBy("order"));
+
+    getDocs(tasksQuery).then((result) => {
+      tasksList.innerHTML = "";
+
       result.docs.forEach((doc) => {
         const task = doc.data();
         const taskId = doc.id;
@@ -30,14 +44,16 @@ export const initTaskList = (tasksCollection, db) => {
           date.getDate();
 
         const doneButton = `<button class="btn btn-success" data-done="${taskId}">Done</button>`;
-        const editButton = `<button class="btn btn-primary" data-edit="${taskId}" data-deadline="${inputDateFormat}" data-title="${task.title}">Edit</button>`;
-        const li = `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${task.title} - ${formattedDate}</span> <div>${doneButton} ${editButton}</div></li>`;
+        const editButton = `<button class="btn btn-primary" data-edit="${taskId}" data-deadline="${inputDateFormat}" data-title="${task.title}" data-order="${task.order}">Edit</button>`;
+        const deleteButton = `<button class="btn btn-danger" data-delete="${taskId}">Delete</button>`;
+        const li = `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${task.title} - ${formattedDate}</span> <div>${doneButton} ${editButton} ${deleteButton}</div></li>`;
 
         tasksList.innerHTML += li;
       });
 
       handleDoneButtons(db);
       handleEditButtons();
+      handleDeleteButtons(db);
     });
   }
 };
@@ -47,15 +63,20 @@ const handleEditButtons = () => {
   const editTaskForm = document.querySelector("#editTaskForm");
   const titleInput = editTaskForm.querySelector("[name='title']");
   const deadlineInput = editTaskForm.querySelector("[name='deadline']");
+  const orderInput = editTaskForm.querySelector("[name='order']");
   const idInput = editTaskForm.querySelector("[name='id']");
 
   buttons.forEach((button) =>
     button.addEventListener("click", (event) => {
+      const modalRef = new bootstrap.Modal("#editTaskModal");
       const element = event.target;
+
+      modalRef.show();
 
       deadlineInput.value = element.dataset.deadline;
       titleInput.value = element.dataset.title;
       idInput.value = element.dataset.edit;
+      orderInput.value = element.dataset.order;
     })
   );
 };
@@ -79,4 +100,19 @@ const handleDoneButtons = (db) => {
   );
 };
 
-// 4. Nastepnie dodaj obsluge wysylki formularza ktory zaktualizuje konkretne zadanie.
+const handleDeleteButtons = (db) => {
+  const buttons = document.querySelectorAll("[data-delete]");
+
+  buttons.forEach((button) =>
+    button.addEventListener("click", (event) => {
+      const element = event.target;
+      const taskId = element.dataset.delete;
+
+      const docRef = doc(db, "tasks", taskId);
+
+      deleteDoc(docRef).then((result) => {
+        element.parentNode.parentNode.remove();
+      });
+    })
+  );
+};

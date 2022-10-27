@@ -16,6 +16,7 @@ export const initAddTaskForm = (tasksCollection) => {
         title: formData.get("title"),
         deadline: deadlineTimestamp,
         done: false,
+        order: +formData.get("order"),
       }).then((result) => {
         console.log("Zadanie zostało dodane do firestore");
         console.log(result);
