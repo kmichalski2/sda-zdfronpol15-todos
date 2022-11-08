@@ -1,4 +1,12 @@
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  TwitterAuthProvider,
+} from "firebase/auth";
 
 export const initLoginForm = (auth) => {
   const loginForm = document.querySelector("#loginForm");
@@ -33,6 +41,29 @@ export const initSignOut = (auth) => {
 
       signOut(auth).then((result) => {
         console.log("Pomyślne wylogowano");
+      });
+    });
+  }
+};
+
+export const displayUserName = (userName) => {
+  const userNameElement = document.querySelector("#userName");
+
+  if (userNameElement) {
+    userNameElement.innerHTML = userName;
+  }
+};
+
+export const initSignWithGoogle = (auth) => {
+  const button = document.querySelector("#signInWithGoogle");
+
+  if (button) {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider).then((result) => {
+        location.href = location.origin;
       });
     });
   }

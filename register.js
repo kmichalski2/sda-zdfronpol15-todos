@@ -15,7 +15,7 @@ export const initRegisterForm = (auth) => {
         formData.get("password")
       )
         .then((result) => {
-          console.log(result);
+          window.location.href = window.location.origin;
         })
         .catch((error) => {
           console.log(error);

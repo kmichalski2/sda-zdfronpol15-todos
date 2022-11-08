@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 
-export const renderTaskList = (tasksCollection, db) => {
+export const renderTaskList = (tasksCollection, db, userId) => {
   if (!tasksCollection) {
     throw new Error("Parametr tasksCollection nie został podany");
   }
@@ -18,9 +18,10 @@ export const renderTaskList = (tasksCollection, db) => {
   const tasksList = document.querySelector("#tasksList");
 
   if (tasksList) {
-    const tasksQuery = query(tasksCollection, orderBy("order"));
+    // const tasksQuery = query(tasksCollection, orderBy("order"));
+    const tasksByUserId = query(tasksCollection, where("userId", "==", userId));
 
-    getDocs(tasksQuery).then((result) => {
+    getDocs(tasksByUserId).then((result) => {
       tasksList.innerHTML = "";
 
       result.docs.forEach((doc) => {
@@ -43,10 +44,13 @@ export const renderTaskList = (tasksCollection, db) => {
           "-" +
           date.getDate();
 
+        const attachmentButton = task.attachment
+          ? `<a class="btn btn-info" href="${task.attachment}">File</a>`
+          : ``;
         const doneButton = `<button class="btn btn-success" data-done="${taskId}">Done</button>`;
         const editButton = `<button class="btn btn-primary" data-edit="${taskId}" data-deadline="${inputDateFormat}" data-title="${task.title}" data-order="${task.order}">Edit</button>`;
         const deleteButton = `<button class="btn btn-danger" data-delete="${taskId}">Delete</button>`;
-        const li = `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${task.title} - ${formattedDate}</span> <div>${doneButton} ${editButton} ${deleteButton}</div></li>`;
+        const li = `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${task.title} - ${formattedDate}</span> <div>${attachmentButton} ${doneButton} ${editButton} ${deleteButton}</div></li>`;
 
         tasksList.innerHTML += li;
       });

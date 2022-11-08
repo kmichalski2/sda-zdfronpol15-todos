@@ -11,7 +11,11 @@
     <nav class="navbar bg-light mb-5">
       <div class="container-fluid">
         <a class="navbar-brand">Navbar</a>
-        <button id="signOut" class="btn btn-warning">Sign Out</button>
+
+        <div>
+          <span id="userName"></span>
+          <button id="signOut" class="btn btn-warning ms-1">Sign Out</button>
+        </div>
       </div>
     </nav>
 
@@ -69,6 +73,12 @@
                   required
                 />
                 <input type="hidden" name="id" required />
+                <label class="form-label">Attachment:</label>
+                <input
+                  type="file"
+                  class="form-control mb-3"
+                  name="attachment"
+                />
               </form>
             </div>
             <div class="modal-footer">
@@ -138,6 +148,12 @@
                   type="number"
                   name="order"
                   value="0"
+                />
+                <label class="form-label">Attachment:</label>
+                <input
+                  type="file"
+                  class="form-control mb-3"
+                  name="attachment"
                 />
               </form>
             </div>
