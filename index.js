@@ -13,6 +13,7 @@ import {
   initSignOut,
   initSignWithGoogle,
 } from "./login";
+import { displayAlert } from "./alert";
 import "./node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./node_modules/bootstrap/dist/js/bootstrap";
 
@@ -24,7 +25,7 @@ const storage = getStorage(app);
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    renderTaskList(tasksCollection, database, user.uid);
+    renderTaskList(tasksCollection, database, user.uid, storage);
     initAddTaskForm(tasksCollection, user.uid, storage);
     initEditTaskForm(database, storage);
     displayUserName(user.email);

@@ -7,9 +7,11 @@ import {
   signOut,
   TwitterAuthProvider,
 } from "firebase/auth";
+import { displayAlert } from "./alert";
 
 export const initLoginForm = (auth) => {
   const loginForm = document.querySelector("#loginForm");
+  let wrongAttemps = 0;
 
   if (loginForm) {
     loginForm.addEventListener("submit", (event) => {
@@ -26,7 +28,23 @@ export const initLoginForm = (auth) => {
           window.location.href = window.location.origin;
         })
         .catch((error) => {
-          console.log(error);
+          console.table(error);
+          if (wrongAttemps > 2) {
+            displayAlert(
+              "Wpisałeś 3 razy złe hasło, jezeli ponownie wpiszesz zle hasło Twoje konto zostanie zablokowane",
+              "warning"
+            );
+          }
+          if (error.code === "auth/user-not-found") {
+            displayAlert(
+              "Nie znaleziono uzytkownika o podanym adresie e-mail.",
+              "warning"
+            );
+          }
+          if (error.code === "auth/wrong-password") {
+            wrongAttemps++;
+            displayAlert("Podałeś nieprawidłowe hasło!", "warning");
+          }
         });
     });
   }

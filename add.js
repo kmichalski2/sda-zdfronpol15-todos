@@ -26,6 +26,7 @@ export const initAddTaskForm = (tasksCollection, userId, storage) => {
               order: +formData.get("order"),
               userId: userId,
               attachment: url,
+              attachmentPath: result.ref.fullPath,
             }).then((result) => {
               console.log("Zadanie zostało dodane do firestore");
               console.log(result);

@@ -12,7 +12,9 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^5.2.2",
-    "firebase": "^9.12.1",
+    "firebase": "^9.12.1"
+  },
+  "devDependencies": {
     "vite": "^3.1.8"
   }
 }

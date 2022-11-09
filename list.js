@@ -1,16 +1,15 @@
 import {
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
-  limit,
-  orderBy,
   query,
-  Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
-export const renderTaskList = (tasksCollection, db, userId) => {
+export const renderTaskList = (tasksCollection, db, userId, storage) => {
   if (!tasksCollection) {
     throw new Error("Parametr tasksCollection nie został podany");
   }
@@ -49,7 +48,7 @@ export const renderTaskList = (tasksCollection, db, userId) => {
           : ``;
         const doneButton = `<button class="btn btn-success" data-done="${taskId}">Done</button>`;
         const editButton = `<button class="btn btn-primary" data-edit="${taskId}" data-deadline="${inputDateFormat}" data-title="${task.title}" data-order="${task.order}">Edit</button>`;
-        const deleteButton = `<button class="btn btn-danger" data-delete="${taskId}">Delete</button>`;
+        const deleteButton = `<button class="btn btn-danger" data-delete="${taskId}" data-path="${task.attachmentPath}">Delete</button>`;
         const li = `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${task.title} - ${formattedDate}</span> <div>${attachmentButton} ${doneButton} ${editButton} ${deleteButton}</div></li>`;
 
         tasksList.innerHTML += li;
@@ -57,7 +56,7 @@ export const renderTaskList = (tasksCollection, db, userId) => {
 
       handleDoneButtons(db);
       handleEditButtons();
-      handleDeleteButtons(db);
+      handleDeleteButtons(db, storage);
     });
   }
 };
@@ -104,17 +103,26 @@ const handleDoneButtons = (db) => {
   );
 };
 
-const handleDeleteButtons = (db) => {
+const handleDeleteButtons = (db, storage) => {
   const buttons = document.querySelectorAll("[data-delete]");
 
   buttons.forEach((button) =>
     button.addEventListener("click", (event) => {
       const element = event.target;
       const taskId = element.dataset.delete;
+      const attachmentPath = element.dataset.path;
 
       const docRef = doc(db, "tasks", taskId);
 
-      deleteDoc(docRef).then((result) => {
+      deleteDoc(docRef).then(() => {
+        if (attachmentPath !== "undefined") {
+          const fileRef = ref(storage, attachmentPath);
+          deleteObject(fileRef).then((result) => {
+            console.log(result);
+            console.info("Plik został usunięty");
+          });
+        }
+
         element.parentNode.parentNode.remove();
       });
     })
