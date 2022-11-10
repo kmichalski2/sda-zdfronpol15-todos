@@ -37,7 +37,7 @@ export const initLoginForm = (auth) => {
           }
           if (error.code === "auth/user-not-found") {
             displayAlert(
-              "Nie znaleziono uzytkownika o podanym adresie e-mail.",
+              `Nie znaleziono uzytkownika o podanym adresie e-mail. <a href="register.html">Nie masz konta? Zarejestruj się!</a>`,
               "warning"
             );
           }
